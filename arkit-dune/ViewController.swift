@@ -40,7 +40,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -65,7 +64,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     func createBox() {
         let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0.0)
         
-        //        let light = SCNLight()
         light.type = .spot
         light.spotOuterAngle = 20
         light.color = UIColor.red
@@ -78,7 +76,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         let material = SCNMaterial()
         let grid = UIImage(named: "art.scnassets/checked.png")
-        //        material.lightingModel = .physicallyBased
         material.diffuse.contents = grid
         
         let boxNode = SCNNode(geometry: box)
@@ -89,7 +86,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         let animation = CABasicAnimation(keyPath: "position.z")
         animation.byValue = 1
-//        animation.toValue = SCNVector4(0, 0, 1, CGFloat(2 * Float.pi))
         animation.timingFunction = CAMediaTimingFunction(name: kCAAnimationLinear)
         animation.duration = 10
         
