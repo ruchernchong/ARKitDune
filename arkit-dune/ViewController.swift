@@ -63,7 +63,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0.0)
         
         light.type = .spot
-        light.spotOuterAngle = 20
+//        light.spotOuterAngle = 10
         light.color = UIColor.red
         
         let lightNode = SCNNode()
@@ -72,11 +72,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         self.sceneView.pointOfView?.addChildNode(lightNode)
         
-        let material = SCNMaterial()
-        let grid = UIImage(named: "art.scnassets/checked.png")
-        material.diffuse.contents = grid
+        let boxMaterial = UIImage(named: "checkered.png")
         
         let boxNode = SCNNode(geometry: box)
+        boxNode.geometry?.firstMaterial?.diffuse.contents = boxMaterial
         boxNode.geometry?.firstMaterial?.lightingModel = .physicallyBased
         boxNode.eulerAngles = SCNVector3Make(45, 45, 0)
         boxNode.position = SCNVector3Make(0, 0, -0.5)
