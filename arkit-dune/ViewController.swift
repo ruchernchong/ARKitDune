@@ -52,9 +52,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let intensity = estimate!.ambientIntensity / 40
         light.intensity = intensity
         sceneView.scene.lightingEnvironment.intensity = intensity
-        
-        print("Intensity \(intensity)")
-    }
+        }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
