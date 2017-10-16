@@ -4,7 +4,7 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
-//    var scene : SCNScene?
+    let configuration = ARWorldTrackingConfiguration()
     var hangarNode : SCNNode!
     var animation : CAAnimation?
     var longestDuration : Double? = 0
@@ -23,12 +23,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         self.setupScene()
         
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = .horizontal
-        configuration.isLightEstimationEnabled = true
-        session.run(configuration)
+        self.configuration.planeDetection = .horizontal
+        self.configuration.isLightEstimationEnabled = true
+        session.run(self.configuration)
         
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
         
         UIApplication.shared.isIdleTimerDisabled = true
     }
@@ -64,7 +63,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     @IBAction func toggleDebug(_ sender: Any) {
         if debugSwitch.isOn {
-            sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+            sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
         } else {
             sceneView.debugOptions = []
         }
@@ -117,6 +116,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             self.hangarNode?.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
             
             node.addChildNode(self.hangarNode!)
+            
+            // MARK: Disable Plane Detection after object is being added
+            
+            self.configuration.planeDetection = []
+            self.session.run(self.configuration)
         }
     }
     
