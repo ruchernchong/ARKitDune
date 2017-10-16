@@ -4,14 +4,15 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
+    var scene : SCNScene?
     var sceneNode : SCNNode?
     var animation : CAAnimation?
     var longestDuration : Double? = 0
     let light = SCNLight()
     
     @IBOutlet var sceneView: ARSCNView!
-    @IBOutlet weak var start: UIButton!
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var debugSwitch: UISwitch!
     
     var session : ARSession {
         return sceneView.session
@@ -20,18 +21,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        sceneView.delegate = self
-        
-        sceneView.antialiasingMode = .multisampling4X
-        
-        sceneView.autoenablesDefaultLighting = false
-        sceneView.automaticallyUpdatesLighting = false
+        self.setupScene()
         
         let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = .horizontal
         configuration.isLightEstimationEnabled = true
         session.run(configuration)
         
+        sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
+        
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        DispatchQueue.main.async {
+            self.scene = SCNScene(named: "art.scnassets/hangar.scn")
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -42,6 +45,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func setupScene() {
+        sceneView.delegate = self
+        
+        sceneView.session = session
+        
+        sceneView.antialiasingMode = .multisampling4X
+        
+        sceneView.autoenablesDefaultLighting = false
+        sceneView.automaticallyUpdatesLighting = false
+    }
+    
+    @IBAction func toggleDebug(_ sender: Any) {
+        if debugSwitch.isOn {
+            sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
+        } else {
+            sceneView.debugOptions = []
+        }
     }
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -56,76 +78,112 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         sceneView.scene.lightingEnvironment.intensity = intensity
     }
     
-    func placeObject() {
-        let scene = SCNScene(named: "art.scnassets/hangar.scn")!
-        let hangarNode = scene.rootNode.childNode(withName: "hangar", recursively: true)!
-        let gateNode = hangarNode.childNode(withName: "gate", recursively: true)!
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        guard let planeAnchor = anchor as? ARPlaneAnchor else  { return }
         
-        hangarNode.enumerateChildNodes({ (child, stop) in
-            let animationKeys = child.animationKeys
+        DispatchQueue.main.async {
+            self.light.type = .directional
+            self.light.color = UIColor.white
+            self.light.castsShadow = true
             
-            if !animationKeys.isEmpty {
-                for key: String in animationKeys {
-                    self.animation = child.animation(forKey: key)
-                    self.animation?.usesSceneTimeBase = false
-                    
-                    let duration = Double((animation?.duration)!)
-                    if duration > self.longestDuration! {
-                        self.longestDuration = duration
-                    }
-                }
-            }
-        })
-        
-        gateNode.enumerateChildNodes({ (child, stop) in
-            let animationKeys = child.animationKeys
-            if !animationKeys.isEmpty {
-                for key : String in animationKeys {
-                    self.animation = child.animation(forKey: key)
-                    self.animation?.usesSceneTimeBase = false
-                    
-                    let duration = Double((animation?.duration)!)
-                    
-                    if duration > self.longestDuration! {
-                        self.longestDuration = duration
-                    }
-                }
-            }
-        })
-        
-        self.sceneNode = hangarNode
-        self.sceneNode?.eulerAngles = SCNVector3Make(45, 0, 0)
-        self.sceneNode?.position = SCNVector3Make(0, 0, -2.5)
-        self.sceneView.pointOfView?.addChildNode(sceneNode!)
-        
-        light.type = .directional
-        light.spotOuterAngle = 45
-        light.color = UIColor.white
-        light.castsShadow = true
-        
-        let lightNode = SCNNode()
-        lightNode.light = light
-        lightNode.eulerAngles = SCNVector3Make(-45, 0, 0)
-        lightNode.position = SCNVector3Make(0, 1, 1)
-        
-        self.sceneView.pointOfView?.addChildNode(lightNode)
-        
+            let lightNode = SCNNode()
+            lightNode.light = self.light
+            lightNode.eulerAngles = SCNVector3Make(-45, 0, 0)
+            lightNode.position = SCNVector3Make(0, 1, 1)
+            
+            node.addChildNode(lightNode)
+            
+            // MARK: Floor
+            
+            let floor = UIImage(named: "art.scnassets/floor.png")!
+            
+            let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x * 2), height: CGFloat(planeAnchor.extent.z * 2))
+            plane.firstMaterial?.diffuse.contents = floor
+            plane.firstMaterial?.lightingModel = .physicallyBased
+            
+            let planeNode = SCNNode(geometry: plane)
+            planeNode.name = "planeAnchor"
+            planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+            planeNode.eulerAngles.x = -.pi / 2
+            
+            node.addChildNode(planeNode)
+            
+            // MARK: Hangar
+            
+            let hangarNode = self.scene?.rootNode.childNode(withName: "hangar", recursively: true)!
+            hangarNode?.scale = SCNVector3(0.004, 0.004, 0.004)
+            hangarNode?.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+            
+            node.addChildNode(hangarNode!)
+        }
     }
     
-    @IBAction func start(_ sender: Any) {
-        placeObject()
-        self.disableButton()
-
-        let timer = Timer.scheduledTimer(timeInterval: longestDuration!, target: self, selector: #selector(self.enableButton), userInfo: nil, repeats: false)
-    }
+//    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+//        guard let planeAnchor = anchor as? ARPlaneAnchor,
+//            let planeNode = node.childNode(withName: "planeAnchor", recursively: true),
+//            let plane = planeNode.geometry as? SCNPlane
+//            else { return }
+//
+//        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+//
+//        plane.width = CGFloat(planeAnchor.extent.x)
+//        plane.height = CGFloat(planeAnchor.extent.z)
+//    }
     
-    func disableButton() {
-        self.start.isEnabled = false
-        self.start.setTitle("Started", for: .disabled)
-    }
-    
-    @objc func enableButton () {
-        self.start.isEnabled = true
-        self.start.setTitle("Click here to Start", for: .normal)
-    }
+//    func placeObject() {
+//        let scene = SCNScene(named: "art.scnassets/hangar.scn")!
+//        let hangarNode = scene.rootNode.childNode(withName: "hangar", recursively: true)!
+//        print(hangarNode.scale)
+//        let gateNode = hangarNode.childNode(withName: "gate", recursively: true)!
+//
+//        hangarNode.enumerateChildNodes({ (child, stop) in
+//            let animationKeys = child.animationKeys
+//
+//            if !animationKeys.isEmpty {
+//                for key: String in animationKeys {
+//                    self.animation = child.animation(forKey: key)
+//                    self.animation?.usesSceneTimeBase = false
+//
+//                    let duration = Double((animation?.duration)!)
+//                    if duration > self.longestDuration! {
+//                        self.longestDuration = duration
+//                    }
+//                }
+//            }
+//        })
+//
+//        gateNode.enumerateChildNodes({ (child, stop) in
+//            let animationKeys = child.animationKeys
+//            if !animationKeys.isEmpty {
+//                for key : String in animationKeys {
+//                    self.animation = child.animation(forKey: key)
+//                    self.animation?.usesSceneTimeBase = false
+//
+//                    let duration = Double((animation?.duration)!)
+//
+//                    if duration > self.longestDuration! {
+//                        self.longestDuration = duration
+//                    }
+//                }
+//            }
+//        })
+//
+//        self.sceneNode = hangarNode
+//        self.sceneNode?.eulerAngles = SCNVector3Make(45, 0, 0)
+//        self.sceneNode?.position = SCNVector3Make(0, 0, -2.5)
+//        self.sceneView.pointOfView?.addChildNode(sceneNode!)
+//
+//        light.type = .directional
+//        light.spotOuterAngle = 45
+//        light.color = UIColor.white
+//        light.castsShadow = true
+//
+//        let lightNode = SCNNode()
+//        lightNode.light = light
+//        lightNode.eulerAngles = SCNVector3Make(-45, 0, 0)
+//        lightNode.position = SCNVector3Make(0, 1, 1)
+//
+//        self.sceneView.pointOfView?.addChildNode(lightNode)
+//
+//    }
 }
