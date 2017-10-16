@@ -4,8 +4,9 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
-    var scene : SCNScene?
-    var sceneNode : SCNNode?
+//    var scene : SCNScene?
+    var hangarNode : SCNNode!
+//    var sceneNode : SCNNode?
     var animation : CAAnimation?
     var longestDuration : Double? = 0
     let light = SCNLight()
@@ -28,13 +29,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         configuration.isLightEstimationEnabled = true
         session.run(configuration)
         
-        sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         
         UIApplication.shared.isIdleTimerDisabled = true
-        
-        DispatchQueue.main.async {
-            self.scene = SCNScene(named: "art.scnassets/hangar.scn")
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -56,11 +53,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         sceneView.autoenablesDefaultLighting = false
         sceneView.automaticallyUpdatesLighting = false
+        
+        let scene = SCNScene()
+        sceneView.scene = scene
+        
+        DispatchQueue.main.async {
+            let hangarScene = SCNScene(named: "art.scnassets/hangar.scn")!
+            self.hangarNode = hangarScene.rootNode.childNode(withName: "hangar", recursively: true)
+        }
     }
     
     @IBAction func toggleDebug(_ sender: Any) {
         if debugSwitch.isOn {
-            sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
+            sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         } else {
             sceneView.debugOptions = []
         }
@@ -89,32 +94,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             let lightNode = SCNNode()
             lightNode.light = self.light
             lightNode.eulerAngles = SCNVector3Make(-45, 0, 0)
-            lightNode.position = SCNVector3Make(0, 1, 1)
+            lightNode.position = SCNVector3Make(0, 0, 1)
             
-            node.addChildNode(lightNode)
+            self.sceneView.scene.rootNode.addChildNode(lightNode)
             
             // MARK: Floor
             
             let floor = UIImage(named: "art.scnassets/floor.png")!
             
-            let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x * 2), height: CGFloat(planeAnchor.extent.z * 2))
+            let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
             plane.firstMaterial?.diffuse.contents = floor
             plane.firstMaterial?.lightingModel = .physicallyBased
             
             let planeNode = SCNNode(geometry: plane)
             planeNode.name = "planeAnchor"
-            planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+            planeNode.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
             planeNode.eulerAngles.x = -.pi / 2
             
             node.addChildNode(planeNode)
             
             // MARK: Hangar
             
-            let hangarNode = self.scene?.rootNode.childNode(withName: "hangar", recursively: true)!
-            hangarNode?.scale = SCNVector3(0.004, 0.004, 0.004)
-            hangarNode?.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+            self.hangarNode?.scale = SCNVector3(0.004, 0.004, 0.004)
+            self.hangarNode?.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
             
-            node.addChildNode(hangarNode!)
+            node.addChildNode(self.hangarNode!)
         }
     }
     
