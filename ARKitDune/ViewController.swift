@@ -6,7 +6,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
 //    var scene : SCNScene?
     var hangarNode : SCNNode!
-//    var sceneNode : SCNNode?
     var animation : CAAnimation?
     var longestDuration : Double? = 0
     let light = SCNLight()
@@ -115,79 +114,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
             // MARK: Hangar
             
-            self.hangarNode?.scale = SCNVector3(0.004, 0.004, 0.004)
             self.hangarNode?.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
             
             node.addChildNode(self.hangarNode!)
         }
     }
     
-//    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-//        guard let planeAnchor = anchor as? ARPlaneAnchor,
-//            let planeNode = node.childNode(withName: "planeAnchor", recursively: true),
-//            let plane = planeNode.geometry as? SCNPlane
-//            else { return }
-//
-//        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
-//
-//        plane.width = CGFloat(planeAnchor.extent.x)
-//        plane.height = CGFloat(planeAnchor.extent.z)
-//    }
-    
-//    func placeObject() {
-//        let scene = SCNScene(named: "art.scnassets/hangar.scn")!
-//        let hangarNode = scene.rootNode.childNode(withName: "hangar", recursively: true)!
-//        print(hangarNode.scale)
-//        let gateNode = hangarNode.childNode(withName: "gate", recursively: true)!
-//
-//        hangarNode.enumerateChildNodes({ (child, stop) in
-//            let animationKeys = child.animationKeys
-//
-//            if !animationKeys.isEmpty {
-//                for key: String in animationKeys {
-//                    self.animation = child.animation(forKey: key)
-//                    self.animation?.usesSceneTimeBase = false
-//
-//                    let duration = Double((animation?.duration)!)
-//                    if duration > self.longestDuration! {
-//                        self.longestDuration = duration
-//                    }
-//                }
-//            }
-//        })
-//
-//        gateNode.enumerateChildNodes({ (child, stop) in
-//            let animationKeys = child.animationKeys
-//            if !animationKeys.isEmpty {
-//                for key : String in animationKeys {
-//                    self.animation = child.animation(forKey: key)
-//                    self.animation?.usesSceneTimeBase = false
-//
-//                    let duration = Double((animation?.duration)!)
-//
-//                    if duration > self.longestDuration! {
-//                        self.longestDuration = duration
-//                    }
-//                }
-//            }
-//        })
-//
-//        self.sceneNode = hangarNode
-//        self.sceneNode?.eulerAngles = SCNVector3Make(45, 0, 0)
-//        self.sceneNode?.position = SCNVector3Make(0, 0, -2.5)
-//        self.sceneView.pointOfView?.addChildNode(sceneNode!)
-//
-//        light.type = .directional
-//        light.spotOuterAngle = 45
-//        light.color = UIColor.white
-//        light.castsShadow = true
-//
-//        let lightNode = SCNNode()
-//        lightNode.light = light
-//        lightNode.eulerAngles = SCNVector3Make(-45, 0, 0)
-//        lightNode.position = SCNVector3Make(0, 1, 1)
-//
-//        self.sceneView.pointOfView?.addChildNode(lightNode)
-//
-//    }
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let planeAnchor = anchor as? ARPlaneAnchor,
+            let planeNode = node.childNode(withName: "planeAnchor", recursively: true),
+            let plane = planeNode.geometry as? SCNPlane
+            else { return }
+        
+        planeNode.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
+        
+        plane.width = CGFloat(planeAnchor.extent.x)
+        plane.height = CGFloat(planeAnchor.extent.z)
+    }
 }
