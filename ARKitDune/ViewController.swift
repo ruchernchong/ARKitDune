@@ -111,10 +111,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         DispatchQueue.main.async {
             // MARK: Floor
             
-            let floor = UIImage(named: "art.scnassets/floor.png")!
-            
-            let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
-            plane.firstMaterial?.diffuse.contents = floor
+            let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x * 5), height: CGFloat(planeAnchor.extent.z * 5))
+            plane.firstMaterial?.colorBufferWriteMask = SCNColorMask(rawValue: 0)
             plane.firstMaterial?.lightingModel = .physicallyBased
             
             let planeNode = SCNNode(geometry: plane)
