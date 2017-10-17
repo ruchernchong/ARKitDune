@@ -5,10 +5,9 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     let configuration = ARWorldTrackingConfiguration()
-    var hangarNode : SCNNode!
-    var animation : CAAnimation?
-    var longestDuration : Double? = 0
     let light = SCNLight()
+
+    var hangarNode : SCNNode!
     
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var statusLabel: UILabel!
@@ -28,6 +27,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
         
         UIApplication.shared.isIdleTimerDisabled = true
+    
     }
     
     override func viewWillDisappear(_ animated: Bool) {
