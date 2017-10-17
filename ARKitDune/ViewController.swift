@@ -23,9 +23,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         setupScene()
         setupLights()
         setupConfig()
-        
-        sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
-        
+                
         UIApplication.shared.isIdleTimerDisabled = true
     
     }
