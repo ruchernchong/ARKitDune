@@ -145,7 +145,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     func sessionWasInterrupted(_ session: ARSession) {
-        let alert = UIAlertController(title: "Session Interrupted", message: "The AR session has been interrupted. The session will now reset.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Session Interrupted", message: "The AR session has been interrupted. The session will now restart.", preferredStyle: .alert)
         
         let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
         
