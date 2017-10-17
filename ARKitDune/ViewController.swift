@@ -6,12 +6,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     let configuration = ARWorldTrackingConfiguration()
     let light = SCNLight()
-
+    
     var hangarNode : SCNNode!
     
     @IBOutlet var sceneView: ARSCNView!
-    @IBOutlet weak var statusLabel: UILabel!
-    @IBOutlet weak var debugSwitch: UISwitch!
+    @IBOutlet weak var messageView: UIView!
+    @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var reset: UIButton!
     
     var session : ARSession {
         return sceneView.session
@@ -23,9 +24,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         setupScene()
         setupLights()
         setupConfig()
-                
+        
         UIApplication.shared.isIdleTimerDisabled = true
-    
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -83,14 +84,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         self.sceneView.scene.rootNode.addChildNode(lightNode)
     }
     
-    @IBAction func toggleDebug(_ sender: Any) {
-        if debugSwitch.isOn {
-            sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
-        } else {
-            sceneView.debugOptions = []
-        }
-    }
-    
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         let estimate = session.currentFrame?.lightEstimate
         
@@ -131,5 +124,81 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             self.configuration.planeDetection = []
             self.session.run(self.configuration)
         }
+    }
+    
+    // Mark: ARSessionDelegate
+    
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        guard let frame = session.currentFrame else { return }
+        
+        showMessage(for: frame, trackingState: frame.camera.trackingState)
+    }
+    
+    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        guard let frame = session.currentFrame else { return }
+        
+        showMessage(for: frame, trackingState: frame.camera.trackingState)
+    }
+    
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        showMessage(for: session.currentFrame!, trackingState: camera.trackingState)
+    }
+    
+    func sessionWasInterrupted(_ session: ARSession) {
+        let alert = UIAlertController(title: "Session Interrupted", message: "The AR session has been interrupted. The session will now reset.", preferredStyle: .alert)
+        
+        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
+        
+        alert.addAction(ok)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func sessionInterruptionEnded(_ session: ARSession) {
+        messageLabel.text = "Session interruption ended. Restarting the session."
+        resetTracking()
+    }
+    
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        messageLabel.text = "An error occurred while trying to setup an AR session.\nError: \(error.localizedDescription)"
+        resetTracking()
+    }
+    
+    func showMessage(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
+        let message : String
+        
+        switch trackingState {
+        case .normal where frame.anchors.isEmpty:
+            message = "Move the device around to detect horizontal surfaces."
+            
+        case .normal:
+            message = ""
+            
+        case .limited(.initializing):
+            message = "Initialising AR session. Please wait..."
+            
+        case .notAvailable:
+            message = "Camera tracking is not available."
+            
+        case .limited(.excessiveMotion):
+            message = "Tracking Limited - Move the device more slowly."
+            
+        case .limited(.insufficientFeatures):
+            message = "Tracking Limited - Point the device at an area with more visible surface details or improved lighting conditions."
+            
+        }
+        
+        messageLabel.text = message
+        messageView.isHidden = message.isEmpty
+    }
+    
+    func resetTracking() {
+        configuration.planeDetection = .horizontal
+        session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+    }
+    
+    @IBAction func reset(_ sender: Any) {
+        messageLabel.text = "Tracking reset."
+        resetTracking()
     }
 }
