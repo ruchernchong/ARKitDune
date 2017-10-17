@@ -64,7 +64,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         sceneView.scene = scene
         
         DispatchQueue.main.async {
-            let hangarScene = SCNScene(named: "art.scnassets/hangar.scn")!
+            let hangarScene = SCNScene(named: "art.scnassets/Hangar.scn")!
             self.hangarNode = hangarScene.rootNode.childNode(withName: "hangar", recursively: true)
         }
     }
