@@ -21,11 +21,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.setupScene()
-        
-        self.configuration.planeDetection = .horizontal
-        self.configuration.isLightEstimationEnabled = true
-        session.run(self.configuration)
+        setupScene()
+        setupLights()
+        setupConfig()
         
         sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
         
@@ -41,6 +39,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    // Mark: Setup the configuration settings
+    
+    func setupConfig() {
+        configuration.planeDetection = .horizontal
+        configuration.isLightEstimationEnabled = true
+        session.run(configuration)
+    }
+    
+    // Mark: Setup the scene
     
     func setupScene() {
         sceneView.delegate = self
@@ -59,6 +67,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             let hangarScene = SCNScene(named: "art.scnassets/hangar.scn")!
             self.hangarNode = hangarScene.rootNode.childNode(withName: "hangar", recursively: true)
         }
+    }
+    
+    // Mark: Setup the lightings
+    
+    func setupLights() {
+        light.type = .directional
+        light.color = UIColor.white
+        light.castsShadow = true
+        light.shadowMode = .deferred
+        
+        let lightNode = SCNNode()
+        lightNode.light = light
+        lightNode.eulerAngles = SCNVector3Make(-45, 0, 0)
+        lightNode.position = SCNVector3Make(0, 0, 1)
+        
+        self.sceneView.scene.rootNode.addChildNode(lightNode)
     }
     
     @IBAction func toggleDebug(_ sender: Any) {
@@ -85,17 +109,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         guard let planeAnchor = anchor as? ARPlaneAnchor else  { return }
         
         DispatchQueue.main.async {
-            self.light.type = .directional
-            self.light.color = UIColor.white
-            self.light.castsShadow = true
-            
-            let lightNode = SCNNode()
-            lightNode.light = self.light
-            lightNode.eulerAngles = SCNVector3Make(-45, 0, 0)
-            lightNode.position = SCNVector3Make(0, 0, 1)
-            
-            self.sceneView.scene.rootNode.addChildNode(lightNode)
-            
             // MARK: Floor
             
             let floor = UIImage(named: "art.scnassets/floor.png")!
@@ -122,17 +135,5 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             self.configuration.planeDetection = []
             self.session.run(self.configuration)
         }
-    }
-    
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor,
-            let planeNode = node.childNode(withName: "planeAnchor", recursively: true),
-            let plane = planeNode.geometry as? SCNPlane
-            else { return }
-        
-        planeNode.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
-        
-        plane.width = CGFloat(planeAnchor.extent.x)
-        plane.height = CGFloat(planeAnchor.extent.z)
     }
 }
