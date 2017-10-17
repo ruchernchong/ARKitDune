@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		394AD5FA1F909B1900029EB4 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 39805A241F8FCE6F008C7047 /* art.scnassets */; };
-		3979FC531F94F89100E35E5A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39AEB9311F8FC71800932939 /* Info.plist */; };
 		39AEB9261F8FC71800932939 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AEB9251F8FC71800932939 /* AppDelegate.swift */; };
 		39AEB9281F8FC71800932939 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AEB9271F8FC71800932939 /* ViewController.swift */; };
 		39AEB92B1F8FC71800932939 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39AEB9291F8FC71800932939 /* Main.storyboard */; };
@@ -130,7 +129,6 @@
 				39AEB9301F8FC71800932939 /* LaunchScreen.storyboard in Resources */,
 				394AD5FA1F909B1900029EB4 /* art.scnassets in Resources */,
 				39AEB92D1F8FC71800932939 /* Assets.xcassets in Resources */,
-				3979FC531F94F89100E35E5A /* Info.plist in Resources */,
 				39AEB92B1F8FC71800932939 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
