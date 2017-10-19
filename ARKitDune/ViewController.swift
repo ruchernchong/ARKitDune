@@ -130,13 +130,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
         guard let frame = session.currentFrame else { return }
-        
         showMessage(for: frame, trackingState: frame.camera.trackingState)
     }
     
     func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
         guard let frame = session.currentFrame else { return }
-        
         showMessage(for: frame, trackingState: frame.camera.trackingState)
     }
     
