@@ -7,14 +7,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     let configuration = ARWorldTrackingConfiguration()
     let light = SCNLight()
     
-    var hangarNode : SCNNode!
+    var hangarNode: SCNNode!
     
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var messageView: UIView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var reset: UIButton!
     
-    var session : ARSession {
+    var session: ARSession {
         return sceneView.session
     }
     
@@ -57,9 +57,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         sceneView.autoenablesDefaultLighting = false
         sceneView.automaticallyUpdatesLighting = false
-        
-        let scene = SCNScene()
-        sceneView.scene = scene
         
         DispatchQueue.main.async {
             let hangarScene = SCNScene(named: "art.scnassets/Hangar.scn")!
