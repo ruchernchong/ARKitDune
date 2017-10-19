@@ -51,8 +51,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func setupScene() {
         sceneView.delegate = self
-        
-        sceneView.session = session
+        sceneView.session.delegate = self
         
         sceneView.antialiasingMode = .multisampling4X
         
@@ -108,14 +107,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
             let planeNode = SCNNode(geometry: plane)
             planeNode.name = "planeAnchor"
-            planeNode.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
+            planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
             planeNode.eulerAngles.x = -.pi / 2
             
             node.addChildNode(planeNode)
             
             // MARK: Hangar
             
-            self.hangarNode?.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
+            self.hangarNode?.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
             
             node.addChildNode(self.hangarNode!)
             
