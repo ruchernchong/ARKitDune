@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13524"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,50 +21,53 @@
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dmn-jz-SgA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </arscnView>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W8I-ye-UG6" customClass="MessageView" customModule="ARKitDune" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="587" width="375" height="80"/>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W8I-ye-UG6">
+                                <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ebl-sV-E6G">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initialising AR session. Please wait..." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hYX-cz-k3T">
-                                            <rect key="frame" x="8" y="8" width="359" height="64"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="64" id="2MI-Z5-vmT"/>
-                                            </constraints>
+                                            <rect key="frame" x="8" y="8" width="359" height="48"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="hYX-cz-k3T" firstAttribute="bottom" secondItem="ebl-sV-E6G" secondAttribute="bottomMargin" id="KWd-Di-2TM"/>
-                                        <constraint firstItem="hYX-cz-k3T" firstAttribute="top" secondItem="ebl-sV-E6G" secondAttribute="topMargin" id="bfk-cO-SAg"/>
-                                        <constraint firstItem="hYX-cz-k3T" firstAttribute="trailing" secondItem="ebl-sV-E6G" secondAttribute="trailingMargin" id="mym-iy-Iab"/>
-                                        <constraint firstItem="hYX-cz-k3T" firstAttribute="leading" secondItem="ebl-sV-E6G" secondAttribute="leadingMargin" id="ulY-J6-f3h"/>
+                                        <constraint firstAttribute="bottom" secondItem="hYX-cz-k3T" secondAttribute="bottom" constant="8" id="3gD-z1-QMk"/>
+                                        <constraint firstAttribute="trailing" secondItem="hYX-cz-k3T" secondAttribute="trailing" constant="8" id="Mzo-wA-Hxk"/>
+                                        <constraint firstItem="hYX-cz-k3T" firstAttribute="leading" secondItem="ebl-sV-E6G" secondAttribute="leading" constant="8" id="Wbb-op-cvD"/>
+                                        <constraint firstItem="hYX-cz-k3T" firstAttribute="top" secondItem="ebl-sV-E6G" secondAttribute="top" constant="8" id="fW3-Qz-Omp"/>
                                     </constraints>
                                 </view>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="W8I-ye-UG6" secondAttribute="height" multiplier="375:64" id="cRe-lL-fWX"/>
+                                </constraints>
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8n1-Wn-hDA">
-                                <rect key="frame" x="339" y="20" width="20" height="23"/>
+                                <rect key="frame" x="338.5" y="20" width="20.5" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="8n1-Wn-hDA" secondAttribute="height" multiplier="15:17" id="5Db-iu-SCV"/>
+                                </constraints>
                                 <state key="normal" image="reset"/>
                                 <connections>
                                     <action selector="reset:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CGO-9K-nQ0"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="dmn-jz-SgA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8CI-8D-Fpl"/>
+                            <constraint firstItem="W8I-ye-UG6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="AXZ-Wi-3lu"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8n1-Wn-hDA" secondAttribute="trailing" constant="16" id="I3Y-6m-v3M"/>
                             <constraint firstItem="dmn-jz-SgA" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="UJ7-TU-6Bh"/>
-                            <constraint firstItem="dmn-jz-SgA" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Wog-YS-9wg"/>
+                            <constraint firstItem="W8I-ye-UG6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="WQ0-Tg-Fpl"/>
+                            <constraint firstAttribute="bottom" secondItem="dmn-jz-SgA" secondAttribute="bottom" id="Wog-YS-9wg"/>
                             <constraint firstItem="dmn-jz-SgA" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="YmE-GC-q9v"/>
-                            <constraint firstItem="W8I-ye-UG6" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="biv-6P-kt7"/>
-                            <constraint firstItem="8n1-Wn-hDA" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="f1z-Lf-fIc"/>
-                            <constraint firstItem="8n1-Wn-hDA" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="fDF-B4-Yfu"/>
-                            <constraint firstItem="W8I-ye-UG6" firstAttribute="trailing" secondItem="dmn-jz-SgA" secondAttribute="trailing" id="xZt-Hl-3Tc"/>
-                            <constraint firstItem="W8I-ye-UG6" firstAttribute="leading" secondItem="dmn-jz-SgA" secondAttribute="leading" id="yLC-1a-eNY"/>
+                            <constraint firstItem="8n1-Wn-hDA" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="efo-EU-7yj"/>
+                            <constraint firstItem="W8I-ye-UG6" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="znb-no-Zg0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
