@@ -10,7 +10,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     var hangarNode: SCNNode!
     
     @IBOutlet var sceneView: ARSCNView!
-    @IBOutlet weak var messageView: UIView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var reset: UIButton!
     
@@ -21,9 +20,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupScene()
-        setupLights()
-        setupConfig()
+        DispatchQueue.main.async {
+            self.messageLabel.text = "Initialising AR session. Please wait..."
+            
+            self.setupScene()
+            self.setupLights()
+            self.setupConfig()
+        }
         
         UIApplication.shared.isIdleTimerDisabled = true
         
@@ -60,7 +63,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         DispatchQueue.main.async {
             let hangarScene = SCNScene(named: "art.scnassets/Hangar.scn")!
-            self.hangarNode = hangarScene.rootNode.childNode(withName: "hangar", recursively: true)
+            self.hangarNode = hangarScene.rootNode.childNode(withName: "Hangar", recursively: true)
         }
     }
     
@@ -138,20 +141,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         showMessage(for: session.currentFrame!, trackingState: camera.trackingState)
     }
     
-    func sessionWasInterrupted(_ session: ARSession) {
-        let alert = UIAlertController(title: "Session Interrupted", message: "The AR session has been interrupted. The session will now restart.", preferredStyle: .alert)
-        
-        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-        
-        alert.addAction(ok)
-        
-        present(alert, animated: true, completion: nil)
-    }
+    //    func sessionWasInterrupted(_ session: ARSession) {
+    //        let alert = UIAlertController(title: "Session Interrupted", message: "The AR session has been interrupted. The session will now restart.", preferredStyle: .alert)
+    //
+    //        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
+    //
+    //        alert.addAction(ok)
+    //
+    //        present(alert, animated: true, completion: nil)
+    //    }
     
-    func sessionInterruptionEnded(_ session: ARSession) {
-        messageLabel.text = "Session interruption ended. Restarting the session."
-        resetTracking()
-    }
+    //    func sessionInterruptionEnded(_ session: ARSession) {
+    //        messageLabel.text = "Session interruption ended. Restarting the session."
+    //        resetTracking()
+    //    }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         messageLabel.text = "An error occurred while trying to setup an AR session.\nError: \(error.localizedDescription)"
@@ -163,13 +166,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         switch trackingState {
         case .normal where frame.anchors.isEmpty:
-            message = "Move the device around to detect horizontal surfaces."
+            message = "Tracking Surface - Move the device around to detect horizontal surfaces."
             
         case .normal:
             message = ""
             
         case .limited(.initializing):
-            message = "Initialising AR session. Please wait..."
+            message = "Calibrating - Move your camera around to calibrate."
             
         case .notAvailable:
             message = "Camera tracking is not available."
@@ -183,7 +186,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         }
         
         messageLabel.text = message
-        messageView.isHidden = message.isEmpty
+        messageLabel.isHidden = message.isEmpty
     }
     
     func resetTracking() {
