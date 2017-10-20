@@ -6,12 +6,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     let configuration = ARWorldTrackingConfiguration()
     let light = SCNLight()
+    var longestDuration: CFTimeInterval = 0.0
     
     var hangarNode: SCNNode!
+    var spaceshipNode: SCNNode!
+    var doorLeftNode: SCNNode!
+    var doorRightNode: SCNNode!
     
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var reset: UIButton!
+    @IBOutlet weak var restart: UIButton!
     
     var session: ARSession {
         return sceneView.session
@@ -21,6 +26,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         super.viewDidLoad()
         
         DispatchQueue.main.async {
+            self.restart.isHidden = true
             self.messageLabel.text = "Initialising AR session. Please wait..."
             
             self.setupScene()
@@ -118,6 +124,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
             node.addChildNode(self.hangarNode!)
             
+            Timer.scheduledTimer(timeInterval: self.longestDuration, target: self, selector: #selector(self.showRestartAnimationButton), userInfo: nil, repeats: false)
+            
             // MARK: Disable Plane Detection after object is being added
             
             self.configuration.planeDetection = []
@@ -190,12 +198,46 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     func resetTracking() {
-        configuration.planeDetection = .horizontal
-        session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        DispatchQueue.main.async {
+            self.configuration.planeDetection = .horizontal
+            self.session.run(self.configuration, options: [.resetTracking, .removeExistingAnchors])
+        }
+    }
+    
+    func animationDuration() {
+        let doorLeftAnimationKey = doorLeftNode.animationKeys.first!
+        let doorLeftAnimation = doorLeftNode.animation(forKey: doorLeftAnimationKey)
+        let animationDuration = doorLeftAnimation?.duration
+        
+        self.longestDuration = animationDuration!
+    }
+    
+    @objc func showRestartAnimationButton() {
+        self.restart.isHidden = false
+    }
+    
+    func resetAnimation() {
+        let spaceshipAnimationKey = spaceshipNode.animationKeys.first!
+        let spaceshipAnimation = spaceshipNode.animationPlayer(forKey: spaceshipAnimationKey)
+        spaceshipAnimation?.play()
+        
+        let doorLeftAnimationKey = self.doorLeftNode.animationKeys.first!
+        let doorRightAnimationKey = self.doorRightNode.animationKeys.first!
+        
+        let doorLeftAnimation = doorLeftNode.animationPlayer(forKey: doorLeftAnimationKey)
+        let doorRightAnimation = doorRightNode.animationPlayer(forKey: doorRightAnimationKey)
+        
+        doorLeftAnimation?.play()
+        doorRightAnimation?.play()
     }
     
     @IBAction func reset(_ sender: Any) {
         messageLabel.text = "Tracking reset."
         resetTracking()
     }
+    
+    @IBAction func restart(_ sender: Any) {
+        resetAnimation()
+    }
+    
 }
