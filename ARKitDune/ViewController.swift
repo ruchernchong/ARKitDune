@@ -7,6 +7,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     let configuration = ARWorldTrackingConfiguration()
     let light = SCNLight()
     var longestDuration: CFTimeInterval = 0.0
+    var timer: Timer!
     
     var hangarNode: SCNNode!
     var spaceshipNode: SCNNode!
@@ -26,7 +27,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         super.viewDidLoad()
         
         DispatchQueue.main.async {
-            self.restart.isHidden = true
+            self.hideRestartAnimationButton()
+            
             self.messageLabel.text = "Initialising AR session. Please wait..."
             
             self.setupScene()
@@ -70,6 +72,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         DispatchQueue.main.async {
             let hangarScene = SCNScene(named: "art.scnassets/Hangar.scn")!
             self.hangarNode = hangarScene.rootNode.childNode(withName: "Hangar", recursively: true)
+            
+            self.spaceshipNode = self.hangarNode.childNode(withName: "Spaceship", recursively: true)!
+            
+            self.doorLeftNode = hangarScene.rootNode.childNode(withName: "DoorLeft", recursively: true)!
+            self.doorRightNode = hangarScene.rootNode.childNode(withName: "DoorRight", recursively: true)!
+            
+            self.animationDuration()
         }
     }
     
@@ -124,7 +133,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
             node.addChildNode(self.hangarNode!)
             
-            Timer.scheduledTimer(timeInterval: self.longestDuration, target: self, selector: #selector(self.showRestartAnimationButton), userInfo: nil, repeats: false)
+            self.setAnimationTimer()
             
             // MARK: Disable Plane Detection after object is being added
             
@@ -199,6 +208,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func resetTracking() {
         DispatchQueue.main.async {
+            self.timer.invalidate()
+            self.hideRestartAnimationButton()
+            self.createMessage(message: "Tracking reset.", color: .red)
             self.configuration.planeDetection = .horizontal
             self.session.run(self.configuration, options: [.resetTracking, .removeExistingAnchors])
         }
@@ -210,6 +222,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let animationDuration = doorLeftAnimation?.duration
         
         self.longestDuration = animationDuration!
+    }
+    
+    func setAnimationTimer() {
+        self.timer = Timer.scheduledTimer(timeInterval: self.longestDuration, target: self, selector: #selector(self.showRestartAnimationButton), userInfo: nil, repeats: false)
+    }
+    
+    func hideRestartAnimationButton() {
+        self.restart.isHidden = true
     }
     
     @objc func showRestartAnimationButton() {
@@ -232,12 +252,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     @IBAction func reset(_ sender: Any) {
-        messageLabel.text = "Tracking reset."
-        resetTracking()
+        DispatchQueue.main.async {
+            self.resetTracking()
+        }
     }
     
     @IBAction func restart(_ sender: Any) {
-        resetAnimation()
+        DispatchQueue.main.async {
+            self.hideRestartAnimationButton()
+            self.resetAnimation()
+            self.setAnimationTimer()
+        }
     }
     
 }
