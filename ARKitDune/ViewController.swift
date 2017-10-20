@@ -168,42 +168,51 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     //        present(alert, animated: true, completion: nil)
     //    }
     
-    //    func sessionInterruptionEnded(_ session: ARSession) {
-    //        messageLabel.text = "Session interruption ended. Restarting the session."
-    //        resetTracking()
-    //    }
+    func sessionInterruptionEnded(_ session: ARSession) {
+        createMessage(message: "Session interruption ended. Restarting the session.", color: .blue)
+        resetTracking()
+    }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
-        messageLabel.text = "An error occurred while trying to setup an AR session.\nError: \(error.localizedDescription)"
+        createMessage(message: "An error occurred while trying to setup an AR session.\nError: \(error.localizedDescription)", color: .red)
         resetTracking()
     }
     
     func showMessage(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
-        let message : String
-        
         switch trackingState {
         case .normal where frame.anchors.isEmpty:
-            message = "Tracking Surface - Move the device around to detect horizontal surfaces."
+            createMessage(message: "Tracking Surface - Move the device around to detect horizontal surfaces.", color: .yellow)
             
         case .normal:
-            message = ""
+            createMessage(message: "", color: .green)
             
         case .limited(.initializing):
-            message = "Calibrating - Move your camera around to calibrate."
+            createMessage(message: "Calibrating - Move your camera around to calibrate.", color: .blue)
             
         case .notAvailable:
-            message = "Camera tracking is not available."
+            createMessage(message: "Camera tracking is not available.", color: .red)
             
         case .limited(.excessiveMotion):
-            message = "Tracking Limited - Move the device more slowly."
+            createMessage(message: "Tracking Limited - Move the device more slowly.", color: .red)
             
         case .limited(.insufficientFeatures):
-            message = "Tracking Limited - Point the device at an area with more visible surface details or improved lighting conditions."
+            createMessage(message: "Tracking Limited - Point the device at an area with more visible surface details or improved lighting conditions.", color: .red)
             
         }
         
+    }
+    
+    func createMessage(message: String, color: UIColor) -> UILabel! {
+        if message.isEmpty {
+            messageLabel.isHidden = true
+        } else {
+            messageLabel.isHidden = false
+        }
+        
         messageLabel.text = message
-        messageLabel.isHidden = message.isEmpty
+        messageLabel.textColor = color
+        
+        return messageLabel
     }
     
     func resetTracking() {
