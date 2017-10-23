@@ -219,10 +219,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func animationDuration() {
         let doorLeftAnimationKey = doorLeftNode.animationKeys.first!
-        let doorLeftAnimation = doorLeftNode.animation(forKey: doorLeftAnimationKey)
-        let animationDuration = doorLeftAnimation?.duration
+        let doorLeftAnimation = doorLeftNode.animationPlayer(forKey: doorLeftAnimationKey)
+        let animationDuration = CAAnimation(scnAnimation: doorLeftAnimation!.animation).duration
         
-        self.longestDuration = animationDuration!
+        self.longestDuration = animationDuration
     }
     
     func setAnimationTimer() {
