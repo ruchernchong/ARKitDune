@@ -205,7 +205,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
     }
     
-    func createMessage(message: String, color: UIColor) -> UILabel! {
+    func createMessage(message: String, color: UIColor) {
         if message.isEmpty {
             messageLabel.isHidden = true
         } else {
@@ -215,7 +215,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         messageLabel.text = message
         messageLabel.textColor = color
         
-        return messageLabel
+//        return messageLabel
     }
     
     func resetTracking() {
