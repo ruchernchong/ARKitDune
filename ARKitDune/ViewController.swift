@@ -161,16 +161,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         showMessage(for: session.currentFrame!, trackingState: camera.trackingState)
     }
     
-//    func sessionWasInterrupted(_ session: ARSession) {
-//        let alert = UIAlertController(title: "Session Interrupted", message: "The AR session has been interrupted. The session will now restart.", preferredStyle: .alert)
-//
-//        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-//
-//        alert.addAction(ok)
-//
-//        present(alert, animated: true, completion: nil)
-//    }
-    
     func sessionInterruptionEnded(_ session: ARSession) {
         createMessage(message: "Session interruption ended. Restarting the session.", color: .blue)
         resetTracking()
@@ -215,7 +205,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         messageLabel.text = message
         messageLabel.textColor = color
         
-//        return messageLabel
     }
     
     func resetTracking() {
