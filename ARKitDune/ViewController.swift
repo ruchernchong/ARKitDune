@@ -17,7 +17,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var reset: UIButton!
-    @IBOutlet weak var restart: UIButton!
+    
+    @IBOutlet weak var restartStackView: UIStackView!
+    @IBOutlet weak var restartButton: UIButton!
+    @IBOutlet weak var restartLabel: UILabel!
     
     var session: ARSession {
         return sceneView.session
@@ -238,11 +241,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     func hideRestartAnimationButton() {
-        self.restart.isHidden = true
+        self.restartStackView.isHidden = true
     }
     
     @objc func showRestartAnimationButton() {
-        self.restart.isHidden = false
+        self.restartStackView.isHidden = false
     }
     
     func resetAnimation() {
@@ -273,5 +276,4 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             self.setAnimationTimer()
         }
     }
-    
 }

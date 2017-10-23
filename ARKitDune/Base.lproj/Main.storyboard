@@ -31,48 +31,53 @@
                                     <action selector="reset:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XBS-v3-QZN"/>
                                 </connections>
                             </button>
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="jVG-oX-42F">
+                                <rect key="frame" x="155" y="562.5" width="64" height="84.5"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7jp-Br-BeA">
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                        <state key="normal" image="restart"/>
+                                        <connections>
+                                            <action selector="restart:" destination="BYZ-38-t0r" eventType="touchUpInside" id="L0n-2U-krj"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Restart" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="poV-hg-LUA">
+                                        <rect key="frame" x="0.0" y="64" width="64" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tracking State" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hYX-cz-k3T">
-                                <rect key="frame" x="16" y="319" width="343" height="29"/>
+                                <rect key="frame" x="64" y="319" width="247" height="29"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Prn-Pp-jKn">
-                                <rect key="frame" x="126" y="617" width="123" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="Prn-Pp-jKn" secondAttribute="height" multiplier="41:10" id="Hhm-ee-Qso"/>
-                                    <constraint firstAttribute="height" constant="30" id="Hlz-tb-paV"/>
-                                </constraints>
-                                <state key="normal" title="Restart Animation">
-                                    <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="restart:" destination="BYZ-38-t0r" eventType="touchUpInside" id="80N-jo-zoP"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="hYX-cz-k3T" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6ce-x1-g9y"/>
                             <constraint firstItem="dmn-jz-SgA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8CI-8D-Fpl"/>
-                            <constraint firstItem="hYX-cz-k3T" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="Aic-Zw-d4B"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hYX-cz-k3T" secondAttribute="trailing" constant="64" id="E9B-tU-iCD"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8n1-Wn-hDA" secondAttribute="trailing" constant="16" id="I3Y-6m-v3M"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Prn-Pp-jKn" secondAttribute="trailing" constant="126" id="M5Z-vE-Kv7"/>
-                            <constraint firstItem="hYX-cz-k3T" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RFB-vi-z7u"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hYX-cz-k3T" secondAttribute="trailing" constant="16" id="SSZ-dC-43X"/>
+                            <constraint firstItem="hYX-cz-k3T" firstAttribute="centerY" secondItem="dmn-jz-SgA" secondAttribute="centerY" id="NPk-dX-JQH"/>
                             <constraint firstItem="dmn-jz-SgA" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="UJ7-TU-6Bh"/>
                             <constraint firstAttribute="bottom" secondItem="dmn-jz-SgA" secondAttribute="bottom" id="Wog-YS-9wg"/>
                             <constraint firstItem="dmn-jz-SgA" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="YmE-GC-q9v"/>
-                            <constraint firstItem="Prn-Pp-jKn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="126" id="bYq-pH-3BE"/>
+                            <constraint firstItem="hYX-cz-k3T" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="64" id="a7r-Lm-hkP"/>
                             <constraint firstItem="8n1-Wn-hDA" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="efo-EU-7yj"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Prn-Pp-jKn" secondAttribute="bottom" constant="20" id="yVV-iM-IoN"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="jVG-oX-42F" secondAttribute="bottom" constant="20" id="tXu-WV-aoS"/>
+                            <constraint firstItem="jVG-oX-42F" firstAttribute="centerX" secondItem="dmn-jz-SgA" secondAttribute="centerX" id="vf7-i1-LWN"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="messageLabel" destination="hYX-cz-k3T" id="P61-8A-vUz"/>
                         <outlet property="reset" destination="8n1-Wn-hDA" id="7Ju-ol-x4D"/>
-                        <outlet property="restart" destination="Prn-Pp-jKn" id="oJx-96-HFI"/>
+                        <outlet property="restartButton" destination="7jp-Br-BeA" id="5xC-Ic-owQ"/>
+                        <outlet property="restartLabel" destination="poV-hg-LUA" id="CCg-Yh-wdN"/>
+                        <outlet property="restartStackView" destination="jVG-oX-42F" id="MMV-H6-Rcw"/>
                         <outlet property="sceneView" destination="dmn-jz-SgA" id="3Xw-cA-JkT"/>
                     </connections>
                 </viewController>
@@ -83,5 +88,6 @@
     </scenes>
     <resources>
         <image name="reset" width="20" height="23"/>
+        <image name="restart" width="64" height="64"/>
     </resources>
 </document>
