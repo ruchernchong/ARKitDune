@@ -18,6 +18,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var reset: UIButton!
     
+    @IBOutlet weak var resetStackView: UIStackView!
+    @IBOutlet weak var resetButton: UIButton!
+    @IBOutlet weak var resetLabel: UILabel!
+    
     @IBOutlet weak var restartStackView: UIStackView!
     @IBOutlet weak var restartButton: UIButton!
     @IBOutlet weak var restartLabel: UILabel!
@@ -30,9 +34,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         super.viewDidLoad()
         
         DispatchQueue.main.async {
+            self.resetStackView.isHidden = true
+            
             self.hideRestartAnimationButton()
             
-            self.messageLabel.text = "Initialising AR session. Please wait..."
+            self.createMessage(message: "Initialising AR session. Please wait...", color: .white)
             
             self.setupScene()
             self.setupLights()
@@ -162,10 +168,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         showMessage(for: session.currentFrame!, trackingState: camera.trackingState)
     }
     
-    func sessionInterruptionEnded(_ session: ARSession) {
-        createMessage(message: "Session interruption ended. Restarting the session.", color: .blue)
-        resetTracking()
-    }
+//    func sessionInterruptionEnded(_ session: ARSession) {
+//        let alert = UIAlertController(title: "Session Interrupted", message: "Session interruption ended. Press OK to restart the session", preferredStyle: .alert)
+//
+//        let ok = UIAlertAction(title: "OK", style: .default) { _ in
+//            self.resetTracking()
+//        }
+//
+//        alert.addAction(ok)
+//
+//        present(alert, animated: true, completion: nil)
+//    }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         createMessage(message: "An error occurred while trying to setup an AR session.\nError: \(error.localizedDescription)", color: .red)
@@ -173,23 +186,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     func showMessage(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
+        self.resetStackView.isHidden = false
+
         switch trackingState {
         case .normal where frame.anchors.isEmpty:
+            self.resetStackView.isHidden = true
+
             createMessage(message: "Tracking Surface - Move the device around to detect horizontal surfaces.", color: .yellow)
             
         case .normal:
             createMessage(message: "", color: .green)
             
         case .limited(.initializing):
+            self.resetStackView.isHidden = true
+
             createMessage(message: "Calibrating - Move your camera around to calibrate.", color: .blue)
             
         case .notAvailable:
+            self.resetStackView.isHidden = false
+            
             createMessage(message: "Camera tracking is not available.", color: .red)
             
         case .limited(.excessiveMotion):
+            self.resetStackView.isHidden = false
+
             createMessage(message: "Tracking Limited - Move the device more slowly.", color: .red)
             
         case .limited(.insufficientFeatures):
+            self.resetStackView.isHidden = false
+
             createMessage(message: "Tracking Limited - Point the device at an area with more visible surface details or improved lighting conditions.", color: .red)
             
         }
@@ -210,7 +235,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func resetTracking() {
         DispatchQueue.main.async {
-            self.timer.invalidate()
+//            self.timer.invalidate()
             self.hideRestartAnimationButton()
             self.createMessage(message: "Tracking reset.", color: .red)
             self.configuration.planeDetection = .horizontal
