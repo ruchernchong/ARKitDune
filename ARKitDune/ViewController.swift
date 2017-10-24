@@ -92,6 +92,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         light.color = UIColor.white
         light.castsShadow = true
         light.shadowMode = .deferred
+        light.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.5)
         
         let lightNode = SCNNode()
         lightNode.light = light
