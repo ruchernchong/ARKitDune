@@ -217,8 +217,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
             createMessage(message: "Tracking Limited - Point the device at an area with more visible surface details or improved lighting conditions.", color: .red)
             
+        case .limited(.relocalizing):
+            createMessage(message: "Relocalising", color: .green)
         }
-        
     }
     
     func createMessage(message: String, color: UIColor) {
