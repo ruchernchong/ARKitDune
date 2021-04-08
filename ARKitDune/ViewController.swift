@@ -132,14 +132,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
             let planeNode = SCNNode(geometry: plane)
             planeNode.name = "planeAnchor"
-            planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+            planeNode.simdPosition = SIMD3(planeAnchor.center.x, 0, planeAnchor.center.z)
             planeNode.eulerAngles.x = -.pi / 2
             
             node.addChildNode(planeNode)
             
             // MARK: Hangar
             
-            self.hangarNode?.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+            self.hangarNode?.simdPosition = SIMD3(planeAnchor.center.x, 0, planeAnchor.center.z)
             
             node.addChildNode(self.hangarNode!)
             
@@ -168,17 +168,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         showMessage(for: session.currentFrame!, trackingState: camera.trackingState)
     }
     
-//    func sessionInterruptionEnded(_ session: ARSession) {
-//        let alert = UIAlertController(title: "Session Interrupted", message: "Session interruption ended. Press OK to restart the session", preferredStyle: .alert)
-//
-//        let ok = UIAlertAction(title: "OK", style: .default) { _ in
-//            self.resetTracking()
-//        }
-//
-//        alert.addAction(ok)
-//
-//        present(alert, animated: true, completion: nil)
-//    }
+    //    func sessionInterruptionEnded(_ session: ARSession) {
+    //        let alert = UIAlertController(title: "Session Interrupted", message: "Session interruption ended. Press OK to restart the session", preferredStyle: .alert)
+    //
+    //        let ok = UIAlertAction(title: "OK", style: .default) { _ in
+    //            self.resetTracking()
+    //        }
+    //
+    //        alert.addAction(ok)
+    //
+    //        present(alert, animated: true, completion: nil)
+    //    }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         createMessage(message: "An error occurred while trying to setup an AR session.\nError: \(error.localizedDescription)", color: .red)
@@ -187,11 +187,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func showMessage(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
         self.resetStackView.isHidden = false
-
+        
         switch trackingState {
         case .normal where frame.anchors.isEmpty:
             self.resetStackView.isHidden = true
-
+            
             createMessage(message: "Tracking Surface - Move the device around to detect horizontal surfaces.", color: .yellow)
             
         case .normal:
@@ -199,7 +199,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
         case .limited(.initializing):
             self.resetStackView.isHidden = true
-
+            
             createMessage(message: "Calibrating - Move your camera around to calibrate.", color: .blue)
             
         case .notAvailable:
@@ -209,16 +209,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
         case .limited(.excessiveMotion):
             self.resetStackView.isHidden = false
-
+            
             createMessage(message: "Tracking Limited - Move the device more slowly.", color: .red)
             
         case .limited(.insufficientFeatures):
             self.resetStackView.isHidden = false
-
+            
             createMessage(message: "Tracking Limited - Point the device at an area with more visible surface details or improved lighting conditions.", color: .red)
             
         case .limited(.relocalizing):
             createMessage(message: "Relocalising", color: .green)
+        case .limited(_):
+            createMessage(message: "Relocalising"
+                          , color: .green)
         }
     }
     
@@ -236,7 +239,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func resetTracking() {
         DispatchQueue.main.async {
-//            self.timer.invalidate()
+            //            self.timer.invalidate()
             self.hideRestartAnimationButton()
             self.createMessage(message: "Tracking reset.", color: .red)
             self.configuration.planeDetection = .horizontal
